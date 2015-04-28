@@ -23,10 +23,10 @@ module.exports = function (grunt) {
       simulate: false
     });
 
-    validate.call(this);
+    validate(options);
 
-    var credentials = this.data.credentials,
-        done = this.async(),
+    var done = this.async(),
+        credentials = options.credentials,
         method = options.id ? 'PUT' : 'POST',
         url = flowBaseUrl + credentials.username + '/api-task/' + (options.simulate ? 'simulate' : '' );
 
@@ -55,26 +55,25 @@ module.exports = function (grunt) {
       done();
     });
   });
-
-  function validate() {
-    if (!this.data.credentials)
+  function validate(options) {
+    if (!options.credentials)
       grunt.fail.fatal('No credentials supplied');
 
-    if (!this.data.credentials.username)
+    if (!options.credentials.username)
       grunt.fail.fatal('No username supplied in credentials');
 
-    if (!this.data.credentials.token)
+    if (!options.credentials.token)
       grunt.fail.fatal('No token supplied in credentials');
 
-    if (!this.data.options.destination)
+    if (!options.destination)
       grunt.fail.fatal('No destination Flow supplied in options');
 
-    if (!this.data.options.js)
+    if (!options.js)
       grunt.fail.fatal('No JavaScript supplied in options');
   }
 
   function fail(errors) {
-    grunt.fail(errors.join('\n'));
+    grunt.fail.fatal(errors.join('\n'));
   }
 
   function log(data) {
